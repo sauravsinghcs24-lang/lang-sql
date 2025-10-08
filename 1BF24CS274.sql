@@ -29,6 +29,31 @@ insert into owns values('A04', 'KA031181');
 insert into owns values('A03', 'KA095477');
 insert into owns values('A05', 'KA041702');
 select* from owns;
+insert into accident values (11, "01-05-24","kathmandu");
+insert into accident values (14, "12-08-25","paris");
+insert into accident values (15, "23-10-22","pokhara");
+insert into accident values (17, "30-12-21","milan");
+insert into accident values (20, "19-02-19","budapest");
+select * from accident;
+update accident set report_num=12 where report_num= 14;
+update accident set report_num=13 where report_num= 15;
+update accident set report_num=14 where report_num= 17;
+update accident set report_num=15 where report_num= 20;
+select * from accident;
+insert into participated values ("A01","KA777777", 11, 10000);
+insert into participated values ("A02","KA0529639", 12, 50000);
+insert into participated values ("A03","KA0147258", 13, 25000);
+insert into participated values ("A04","KA0789456", 14, 3000);
+insert into participated values ("A05","KA0123698", 15, 5000);
+select * from participated;
+show tables;
+update participated set damage_ammount=25000 where reg_num= "KA0123698" and report_num=15;
+commit;
+select * from participated;
+insert into accident values (16, "31-12-21","oslo");
+select * from accident;
+select accident_date,location from accident;
+select driver_id from participated where damage_ammount>=25000;
 
 
 
