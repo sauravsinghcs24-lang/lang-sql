@@ -28,10 +28,10 @@ insert into BankAccount values(3,'SBI_SivajiRoad',60000);
 insert into BankAccount values(4,'SBI_ParlimentRoad',90000);
 insert into BankAccount values(5,'SBI_JanterManter',80000);
 insert into BankAccount values(6,'SBI_SivajiRoad',40000);
-insert into BankAccount values(7,'SBI_ResidencyRoad',40000);
-insert into BankAccount values(8,'SBI_ParlimentRoad',30000);
-insert into BankAccount values(9,'SBI_ResidencyRoad',50000);
-insert into BankAccount values(10,'SBI_JanterManter',20000);
+insert into BankAccount values(8,'SBI_ResidencyRoad',40000);
+insert into BankAccount values(9,'SBI_ParlimentRoad',30000);
+insert into BankAccount values(10,'SBI_ResidencyRoad',50000);
+insert into BankAccount values(11,'SBI_JanterManter',20000);
 commit;
 select* from BankAccount;
 
@@ -40,6 +40,8 @@ insert into Bankcustomer values ("Dinesh","Bannergatta_Road","Banglore");
 insert into Bankcustomer values ("Mohan","NationalCollege_Road","Banglore");
 insert into Bankcustomer values ("Nikil","Akbar_Road","Delhi");
 insert into Bankcustomer values ("Ravi","Prithviraj_Road","Delhi");
+
+select * from Bankcustomer;
 
 insert into Depositer values ("Avinash", 1);
 insert into Depositer values ("Dinesh", 2);
@@ -50,6 +52,78 @@ insert into Depositer values ("Nikil", 9);
 insert into Depositer values ("Dinesh", 10);
 insert into Depositer values ("Nikil", 11);
 
+select* from Depositer;
+SELECT d.CUSTOMERNAME FROM Depositer d JOIN BankAccount a ON d.ACCNO = a.ACCNO GROUP BY d.CUSTOMERNAME HAVING COUNT(d.ACCNO) >= 2;
+
+
+
+SELECT d.CUSTOMERNAME FROM Depositer d JOIN BankAccount a ON d.ACCNO = a.ACCNO
+JOIN Branch b ON a.BRANCHNAME = b.BRANCHNAME
+WHERE b.BRANCHCITY = 'Delhi'
+GROUP BY d.CUSTOMERNAME
+HAVING COUNT(DISTINCT b.BRANCHNAME) = (
+    SELECT COUNT(*)
+    FROM Branch
+    WHERE BRANCHCITY = 'Delhi'
+);
+
+Select * from Depositer d;
+
+
+DELETE a
+FROM BankAccount a
+JOIN branch b ON a.branchname = b.branchname
+WHERE b.branchcity = 'Bombay';
+Select * from BankAccount a;
+
+
+
+
+
+CREATE VIEW BranchLoanSummary AS
+Select branchname,
+Sum(Amount) AS total_loan_amount
+From Loan
+Group By branchname;
+Select * from Loan;
+
+SELECT
+    D.customername,
+    B.branchname,
+    COUNT(D.accno) AS totalaccounts
+FROM Depositer D
+JOIN BankAccount B ON D.accno = B.accno
+GROUP BY D.customername, B.branchname
+HAVING COUNT(D.accno) >= 2;
+
+
+
+SELECT branchname, (assests/1000) AS "assets in thousand"
+FROM branch;
+
+SELECT * FROM loan ORDER BY AMOUNT DESC;
+SELECT DISTINCT C.customername
+FROM customer C
+WHERE C.customer_name IN (
+    SELECT D.customername
+    FROM Depositor D
+);
+
+CREATE VIEW BranchLoanSummary1 AS
+SELECT branchname,
+       SUM(amount) AS total_loan_amount
+FROM Loan
+GROUP BY branch_name;
+SELECT * FROM BranchLoanSummary1;
+
+UPDATE branch
+SET assets = assets * 1.05;
+
+SELECT branch_name, branch_city, assets FROM BankBranch;
+
+select distinct customername
+        from BankCustomer where customername not in 
+        (select customername from Depositer)
 
 
 
