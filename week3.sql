@@ -10,6 +10,8 @@ create table Depositer(customername varchar(30),accno integer,primary key(custom
 desc depositer;
 create table loan(loannumber int, branchname varchar(30),amount real,primary key (loannumber),foreign key (branchname) references branch(branchname));
 desc loan;
+create table borrower (customername VARCHAR(30),loannumber INT,PRIMARY KEY (customername, loannumber),FOREIGN KEY (customername) REFERENCES bankcustomer(customername),FOREIGN KEY (loannumber) REFERENCES loan(loannumber));
+
 insert into branch values('SBI_Chamrajpet','Bangalore',50000);
 insert into branch values('SBI_ResidencyRoad','Bangalore',10000);
 insert into branch values('SBI_SivajiRoad','Bombay',20000);
@@ -52,6 +54,13 @@ insert into Depositer values ("Nikil", 9);
 insert into Depositer values ("Dinesh", 10);
 insert into Depositer values ("Nikil", 11);
 
+INSERT INTO borrower VALUES ('Avinash', 1);
+INSERT INTO borrower VALUES ('Dinesh', 2);
+INSERT INTO borrower VALUES ('Mohan', 3);
+INSERT INTO borrower VALUES ('Nikil', 4);
+INSERT INTO borrower VALUES ('Ravi', 5);
+
+
 select* from Depositer;
 SELECT d.CUSTOMERNAME FROM Depositer d JOIN BankAccount a ON d.ACCNO = a.ACCNO GROUP BY d.CUSTOMERNAME HAVING COUNT(d.ACCNO) >= 2;
 
@@ -76,6 +85,12 @@ JOIN branch b ON a.branchname = b.branchname
 WHERE b.branchcity = 'Bombay';
 Select * from BankAccount a;
 
+SELECT customername 
+from branch
+where b.branchcity = 'Delhi';
+SELECT *from branch;
+
+
 
 
 
@@ -95,13 +110,17 @@ FROM Depositer D
 JOIN BankAccount B ON D.accno = B.accno
 GROUP BY D.customername, B.branchname
 HAVING COUNT(D.accno) >= 2;
+SELECT* FROM Depositer d;
 
 
 
 SELECT branchname, (assests/1000) AS "assets in thousand"
 FROM branch;
 
-SELECT * FROM loan ORDER BY AMOUNT DESC;
+SELECT * 
+FROM loan 
+ORDER BY AMOUNT DESC;
+
 SELECT DISTINCT C.customername
 FROM customer C
 WHERE C.customer_name IN (
@@ -110,21 +129,76 @@ WHERE C.customer_name IN (
 );
 
 CREATE VIEW BranchLoanSummary1 AS
-SELECT branchname,
-       SUM(amount) AS total_loan_amount
+SELECT branchname,SUM(amount) AS total_loan_amount
 FROM Loan
-GROUP BY branch_name;
+GROUP BY branchname;
 SELECT * FROM BranchLoanSummary1;
 
 UPDATE branch
-SET assets = assets * 1.05;
+SET Account = Account * 1.05;
 
 SELECT branch_name, branch_city, assets FROM BankBranch;
 
-select distinct customername
+select distinct customernam
         from BankCustomer where customername not in 
-        (select customername from Depositer)
+        (select customername from Depositer);
 
+
+SELECT DISTINCT D.customername
+FROM Depositer D
+WHERE NOT EXISTS 
+    (SELECT branchname
+     FROM Branch
+     WHERE branchcity = 'Delhi');
+     
+SELECT DISTINCT customername
+FROM borrower
+WHERE customername NOT IN (
+    SELECT customername FROM depositer
+);
+
+SELECT DISTINCT bo.customername
+FROM borrower AS bo
+JOIN loan AS l ON bo.loannumber = l.loannumber
+WHERE l.branchname IN (
+    SELECT branchname FROM branch WHERE branchcity = 'Bangalore'
+)
+AND (l.branchname, bo.customername) IN (
+    SELECT a.branchname, d.customername
+    FROM depositer AS d
+    JOIN bankaccount AS a ON d.accno = a.accno
+);
+
+UPDATE branch
+SET assests = assests * 1.05;
+
+select* from branch;
+
+SELECT branchname
+FROM branch
+WHERE assests > ALL (
+    SELECT assests
+    FROM branch
+    WHERE branchcity = 'Bangalore'
+);
+
+select *
+from loan
+order by amount desc;
+
+(select customername
+from Depositer) UNION(select customername
+                          from borrower);
+
+create view Branch_total_loan(branchname,Total_Loan) as select branchname, sum(amount)
+from loan
+group by branchname;           
+
+
+ UPDATE branch
+SET assests=assests*1.05;      
+select* from branch;
+   
 
 
 
