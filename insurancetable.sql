@@ -16,7 +16,7 @@ insert into person values('A02','PRADEEP','RAJAJINAGAR');
 insert into person values('A03','SMITH','ASHOKNAGAR');
 insert into person values('A04','VENU','N.R.COLONY');
 insert into person values('A05','JOHN','HANUMANTH NAGAR');
-
+select* from person;
 insert into car values('KA052250','INDICA','1990');
 insert into car values('KA031181','LANCER','1957');
 insert into car values('KA095477','TOYOTA','1998');
@@ -40,21 +40,50 @@ update accident set report_num=13 where report_num= 15;
 update accident set report_num=14 where report_num= 17;
 update accident set report_num=15 where report_num= 20;
 select * from accident;
-insert into participated values ("A01","KA777777", 11, 10000);
-insert into participated values ("A02","KA0529639", 12, 50000);
-insert into participated values ("A03","KA0147258", 13, 25000);
-insert into participated values ("A04","KA0789456", 14, 3000);
-insert into participated values ("A05","KA0123698", 15, 5000);
+insert into participated values ("A01","KA052250", 11, 10000);
+insert into participated values ("A02","KA053408", 12, 50000);
+insert into participated values ("A03","KA095477", 13, 25000);
+insert into participated values ("A04","KA031181", 14, 3000);
+insert into participated values ("A05","KA041702", 15, 5000);
+
 select * from participated;
 show tables;
-update participated set damage_ammount=25000 where reg_num= "KA0123698" and report_num=15;
+update participated set damage_amount=25000 where reg_num= "KA0123698" and report_num=15;
 commit;
 select * from participated;
 insert into accident values (16, "31-12-21","oslo");
 select * from accident;
-select accident_date,location from accident;
-select driver_id from participated where damage_ammount>=25000;
 
+select accident_date,location from accident;
+select driver_id from participated where damage_amount>=25000;
+
+SELECT *
+FROM participated
+ORDER BY damage_amount DESC;
+
+SELECT AVG(damage_amount)
+FROM participated;
+
+SET SQL_SAFE_UPDATES = 0;
+
+
+DELETE FROM participated
+WHERE damage_amount < (
+    SELECT avg_damage
+    FROM (SELECT AVG(damage_amount) AS avg_damage FROM participated) AS temp
+);
+select * from participated;
+
+SELECT name
+FROM person a, participated b
+WHERE a.driver_id = b.driver_id
+  AND damage_amount > (
+      SELECT AVG(damage_amount)
+      FROM participated
+  );
+
+SELECT MAX(damage_amount)
+FROM participated;
 
 
 
