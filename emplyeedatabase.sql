@@ -8,9 +8,9 @@ create table project(pno int primary key, pname varchar(30) not null, ploc varch
 create table assigned_to( empno decimal(4,0) references emp(empno) on delete cascade on update cascade, pno int references project(pno) on delete cascade on update cascade,job_role varchar(30),primary key (empno,pno));
 show tables;
 insert into dept values(10,'ACCOUNTING','MUMBAI'),
-(20,'ACCOUNTING','BENGALURU'),
-(30,'ACCOUNTING','DELHI'),
-(40,'ACCOUNTING','CHENNAI');
+(20,'RESEARCH','BENGALURU'),
+(30,'SALES','DELHI'),
+(40,'OPERATIONS','CHENNAI');
 
 insert into emp values (7369,'adarsh',7902,'2012-12-17','80000.00','20'),
 (7499,'shruthi',7698,'2013-02-20','16000.00','30'),
@@ -25,3 +25,55 @@ insert into emp values (7369,'adarsh',7902,'2012-12-17','80000.00','20'),
 (7876,'adams',7788,'2013-12-17','11000.00','20'),
 (7900,'james',7698,'2017-03-17','9500.00','30'),
 (7902,'ford',7566,'2010-03-17','30000.00','20');
+
+select * from emp;
+
+INSERT INTO incentives VALUES(7499,'2019-02-01',5000.00);
+INSERT INTO incentives VALUES(7521,'2019-03-01',2500.00);
+INSERT INTO incentives VALUES(7566,'2022-02-01',5070.00);
+INSERT INTO incentives VALUES(7654,'2020-02-01',2000.00);
+INSERT INTO incentives VALUES(7654,'2022-04-01',879.00);
+INSERT INTO incentives VALUES(7521,'2019-02-01',8000.00);
+INSERT INTO incentives VALUES(7698,'2019-03-01',500.00);
+INSERT INTO incentives VALUES(7698,'2020-03-01',9000.00);
+INSERT INTO incentives VALUES(7698,'2022-04-01',4500.00);
+select * from incentives;
+
+INSERT INTO project VALUES(101,'AI Project','BENGALURU');
+INSERT INTO project VALUES(102,'IOT','HYDERABAD');
+INSERT INTO project VALUES(103,'BLOCKCHAIN','BENGALURU');
+INSERT INTO project VALUES(104,'DATA SCIENCE','MYSURU');
+INSERT INTO project VALUES(105,'AUTONOMUS SYSTEMS','PUNE');
+select * from project;
+
+INSERT INTO assigned_to VALUES(7499,101,'Software Engineer');
+INSERT INTO assigned_to VALUES(7521,101,'Software Architect');
+INSERT INTO assigned_to VALUES(7566,101,'Project Manager');
+INSERT INTO assigned_to VALUES(7654,102,'Sales');
+INSERT INTO assigned_to VALUES(7521,102,'Software Engineer');
+INSERT INTO assigned_to VALUES(7499,102,'Software Engineer');
+INSERT INTO assigned_to VALUES(7654,103,'Cyber Security');
+INSERT INTO assigned_to VALUES(7698,104,'Software Engineer');
+INSERT INTO assigned_to VALUES(7900,105,'Software Engineer');
+INSERT INTO assigned_to VALUES(7839,104,'General Manager');
+
+select * from assigned_to;
+
+select e.empno
+from emp e, assigned_to a, project p
+where e.empno=a.empno and a.pno=p.pno and
+p.ploc in ('Bengaluru','Hyderabad','Mysuru');
+
+select e.empno,e.ename,d.dname,d.loc,a.job_role,p.ploc
+from emp e, dept d, assigned_to a,project p
+where e.deptno= d.deptno and e.empno=a.empno and a.pno=p.pno and d.loc=p.ploc;
+
+
+
+
+update dept set dname='RESEARCH'
+WHERE deptno=20;
+update dept set dname='sales'
+WHERE deptno=30;
+update dept set dname='OPERATIONS'
+WHERE deptno=40;
