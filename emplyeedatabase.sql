@@ -77,3 +77,10 @@ update dept set dname='sales'
 WHERE deptno=30;
 update dept set dname='OPERATIONS'
 WHERE deptno=40;
+
+
+
+SELECT empno
+FROM emp
+WHERE empno NOT IN (SELECT empno FROM incentives);
+
