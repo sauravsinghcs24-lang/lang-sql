@@ -79,8 +79,54 @@ update dept set dname='OPERATIONS'
 WHERE deptno=40;
 
 
-
 SELECT empno
 FROM emp
 WHERE empno NOT IN (SELECT empno FROM incentives);
 
+SELECT m.ename, COUNT(*)  employee_count
+FROM emp e, emp m
+WHERE e.mgr_no = m.empno
+GROUP BY m.ename
+HAVING COUNT(*) = (SELECT MAX(mycount)
+    FROM (SELECT COUNT(*)  mycount
+        FROM emp
+        GROUP BY mgr_no) a);
+
+SELECT *
+FROM emp m
+WHERE m.empno IN
+(SELECT mgr_no
+FROM emp)
+AND m.sal>
+(SELECT avg(e.sal)
+FROM emp e
+WHERE e.mgr_no=m.empno);
+
+select distinct m.mgr_no,m.empno,m.ename,e.deptno,m.sal,m.hiredate from emp e,emp m
+where e.mgr_no=m.mgr_no and e.deptno=m.deptno and e.empno in(
+select distinct m.mgr_no from emp e,emp m
+where e.mgr_no=m.mgr_no and e.deptno=m.deptno);
+
+
+
+select *
+from emp e,incentives i
+where e.empno=i.empno and 2 = ( select count(*)
+from incentives j
+where i.incentive_amount <= j.incentive_amount );
+
+SELECT distinct e.ename
+FROM emp e,incentives i
+WHERE (SELECT max(sal+incentive_amount)
+FROM emp,incentives) >= ANY
+(SELECT sal
+FROM emp e1
+where e.deptno=e1.deptno);
+
+
+
+SELECT *
+FROM EMP E
+WHERE E.DEPTNO = (SELECT E1.DEPTNO
+FROM EMP E1
+WHERE E1.EMPNO=E.MGR_NO);
